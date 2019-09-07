@@ -1,17 +1,17 @@
 // listen for submit
 document.getElementById('loan-form').addEventListener('submit', calculateResults);
+document.getElementById('loan-form').addEventListener('reset', clean);
 
 // calculate results
 function calculateResults(e) {
-    console.log('Calculating...');
     // ui variables
-    const amount = getElementById('amount');
-    const interest = getElementById('interest');
-    const years = getElementById('years');
+    const amount = document.getElementById('amount');
+    const interest = document.getElementById('interest');
+    const years = document.getElementById('years');
     // results
-    const monthlyPayment = getElementById('monthly-payment');
-    const totalPayment = getElementById('total-payment');
-    const totalInterest = getElementById('total-interest');
+    const monthlyPayment = document.getElementById('monthly-payment');
+    const totalPayment = document.getElementById('total-payment');
+    const totalInterest = document.getElementById('total-interest');
 
     const principalAmount = parseFloat(amount.value);
     const calculatedInterest = parseFloat(interest.value) / 100  / 12;
@@ -26,7 +26,39 @@ function calculateResults(e) {
         totalPayment.value = (monthly * calculatedPayments).toFixed(2);
         totalInterest.value = ((monthly * calculatedPayments) - principalAmount).toFixed(2);
     } else {
-        console.log('Please check your numbers')
+        showError('Please check your numbers');
     }
     e.preventDefault();
+}
+// show error
+function showError(error) {
+    //create a div
+    const errorDiv = document.createElement('div');
+
+    // get elements
+    const card = document.querySelector('.card');
+    const heading = document.querySelector('.heading');
+
+    // add class
+    errorDiv.className = 'alert alert-danger';
+
+    // create text node and append to div
+    errorDiv.appendChild(document.createTextNode(error));
+
+    // insert error above heading
+    card.insertBefore(errorDiv, heading);
+
+    // clear error after 3 sec
+    setTimeout(clearError, 3000);
+
+    function clearError() {
+        document.querySelector('.alert').remove();
+    }
+}
+
+function clean(e) {
+    monthlyPayment.value = "";
+    totalPayment.value = "";
+    totalInterest.value = "";
+    e.preventDefault(e);
 }
