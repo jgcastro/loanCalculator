@@ -1,9 +1,21 @@
 // listen for submit
-document.getElementById('loan-form').addEventListener('submit', calculateResults);
-document.getElementById('loan-form').addEventListener('reset', clean);
+document.getElementById('loan-form').addEventListener('submit', function(e) {
+    // hide results
+    document.getElementById('results').style.display = 'none';
+    // show loader
+    document.getElementById('loading').style.display = 'block';
+
+    setTimeout(calculateResults, 2000);
+
+    e.preventDefault();
+});
+document.getElementById('loan-form').addEventListener('reset', function(e) {
+    clean();
+    e.preventDefault(e);
+});
 
 // calculate results
-function calculateResults(e) {
+function calculateResults() {
     // ui variables
     const amount = document.getElementById('amount');
     const interest = document.getElementById('interest');
@@ -25,13 +37,23 @@ function calculateResults(e) {
         monthlyPayment.value = monthly.toFixed(2);
         totalPayment.value = (monthly * calculatedPayments).toFixed(2);
         totalInterest.value = ((monthly * calculatedPayments) - principalAmount).toFixed(2);
+
+        // show results
+        document.getElementById('results').style.display = 'block';
+
+        // hide loader
+        document.getElementById('loading').style.display = 'none';
     } else {
         showError('Please check your numbers');
     }
-    e.preventDefault();
+    
 }
 // show error
 function showError(error) {
+    // hide results
+    document.getElementById('results').style.display = 'none';
+    // show loader
+    document.getElementById('loading').style.display = 'none';
     //create a div
     const errorDiv = document.createElement('div');
 
@@ -56,9 +78,12 @@ function showError(error) {
     }
 }
 
-function clean(e) {
+function clean() {
+    // hide results
+    document.getElementById('results').style.display = 'none';
+    // show loader
+    document.getElementById('loading').style.display = 'none';
     monthlyPayment.value = "";
     totalPayment.value = "";
     totalInterest.value = "";
-    e.preventDefault(e);
 }
